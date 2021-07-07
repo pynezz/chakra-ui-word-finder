@@ -6,14 +6,16 @@ export default function InputField() {
   const handleChange = (event) => setValue(event.target.value);
   return (
     <Input 
-        placeholder="Enter a word..." 
-        variant="flushed" 
-        type="text" 
-        height="100px" 
-        width="300px" 
-        m={2} 
-        fontSize="38px"
-        textAlign="center"
-      />
+      placeholder="Enter a word..."
+      variant="flushed" 
+      type="text" 
+      height="60px" 
+      width="400px" 
+      mb={4} 
+      fontSize="38px"
+      textAlign="center"
+      value={value}
+      onChange={handleChange}
+    />
   )
 }

@@ -1,5 +1,6 @@
-import { Checkbox, Flex, Heading, Stack, Text } from '@chakra-ui/react'
+import { Checkbox, Flex, Heading, Stack, CheckboxGroup } from '@chakra-ui/react'
 import Inputfield from '../components/Inputfield'
+import CheckboxItem from '../components/CheckboxItem'
 
 const IndexPage = () => (
   <Flex height="100vh" alignItems="center" justifyContent="center" direction="column">
@@ -8,16 +9,26 @@ const IndexPage = () => (
     </Flex>
     <Inputfield />
     <Stack spacing={6}>
-      <Flex direction="row">
-        <Checkbox mx={5}>check</Checkbox>
-        <Checkbox mx={5}>check</Checkbox>
-        <Checkbox mx={5}>check</Checkbox>
-      </Flex>
-      <Flex direction="row">
-        <Checkbox mx={5}>check</Checkbox>
-        <Checkbox mx={5}>check</Checkbox>
-        <Checkbox mx={5}>check</Checkbox>
-      </Flex>
+      <CheckboxGroup colorScheme="blue" defaultValue={['similar']}>
+        <Flex direction="row"alignItems="left" >      
+
+          <Flex direction="column" alignItems="left">
+            <CheckboxItem mx={5} value="Similar words" setId={'similar'}  />
+            <Checkbox mx={5} value="antonyms">Antonyms</Checkbox>
+          </Flex>
+
+          <Flex direction="column" alignItems="left">        
+            <Checkbox mx={2} value="hypernyms">Hypernyms</Checkbox>
+            <Checkbox mx={2} value="hyponyms">Hyponyms</Checkbox>
+          </Flex>
+
+          <Flex direction="column" alignItems="left">   
+            <Checkbox mx={5} value="synonyms">Synonyms</Checkbox>
+            <Checkbox mx={5} value="rhymes">Rhymes</Checkbox>
+          </Flex>
+
+        </Flex>
+      </CheckboxGroup>
     </Stack>    
   </Flex>  
 )
