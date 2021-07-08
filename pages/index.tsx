@@ -15,6 +15,24 @@ const IndexPage = () => {
     checkedItems.forEach((element) => {
       if (element) {
         console.log(`${element} is checked`)
+        // Run API call here
+        let res = ""; // Create a string variable
+      let req = new XMLHttpRequest(); // Make a new request:
+      req.open(
+        "GET",
+        `${API_URL}${element.value}=${search}${lang}${maxResponses}`,
+        search
+      );
+      req.setRequestHeader("Accept", "application/json");
+      req.send(); // Send the request to the API with the checkbox's value as a parameter
+      req.onload = () => {
+        // When the request is done
+        if (req.status == 200) {
+          // If the status is 200 (no problems)
+          res = req.response; // Assign the response to the string variable 'res'
+        }
+        generateHTML(res, element.value); // And lastly, generate the HTML
+      };
       }
     })
   }
