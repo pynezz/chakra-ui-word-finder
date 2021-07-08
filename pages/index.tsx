@@ -1,38 +1,36 @@
 import { Checkbox, Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, useCheckbox } from '@chakra-ui/react'
 import Inputfield from '../components/Inputfield'
 import CheckboxItem from '../components/CheckboxItem'
-import { Children, useState } from 'react'
+import { Children, useRef, useState } from 'react'
 
 const IndexPage = () => {
   const { toggleColorMode } = useColorMode()
 
   const [checkedItems, setCheckedItems] = useState([]);
-  const items = [];
 
   const API_URL = "https://api.datamuse.com/words?";
 
-  const runApi = () => {
+  const runApi = (search) => {
+    const r : number = 12
+    const maxResponses : string = `&max=${r}`
+    
     checkedItems.forEach((element) => {
-      if (element) {
-        console.log(`${element} is checked`)
-        // Run API call here
-        let res = ""; // Create a string variable
-      let req = new XMLHttpRequest(); // Make a new request:
-      req.open(
-        "GET",
-        `${API_URL}${element.value}=${search}${lang}${maxResponses}`,
-        search
-      );
-      req.setRequestHeader("Accept", "application/json");
-      req.send(); // Send the request to the API with the checkbox's value as a parameter
-      req.onload = () => {
-        // When the request is done
-        if (req.status == 200) {
-          // If the status is 200 (no problems)
-          res = req.response; // Assign the response to the string variable 'res'
-        }
-        generateHTML(res, element.value); // And lastly, generate the HTML
-      };
+      if (element) {                    // If an element is checked(this checks for bools)
+        console.log(typeof(element) + typeof(items))
+        let res = "";                   // Create a string variable
+        let req = new XMLHttpRequest(); // Make a new request:
+        req.open(
+          "GET",
+          `${API_URL}${element.value}=${search}${maxResponses}`
+        );
+        req.setRequestHeader("Accept", "application/json");
+        req.send();       // Send the request to the API with the checkbox's value as a parameter
+        req.onload = () => {
+          // When the request is done
+          if (req.status == 200) {
+            res = req.response; // Assign the response to the string variable 'res'
+          }
+        };
       }
     })
   }
@@ -50,7 +48,8 @@ const IndexPage = () => {
           <Inputfield />
           <Stack spacing={6}>
             <CheckboxGroup colorScheme="blue" defaultValue={['similar']} onChange={setCheckedItems}>
-              <Flex direction="row"alignItems="left" >      
+              <Flex direction="row"alignItems="left" >
+                
                 <Flex direction="column" alignItems="left">
                   <CheckboxItem value="similar" mx={5} content={'Similar words'} />
                   <CheckboxItem value="antonyms" mx={5} content={'Antonyms'}/>
