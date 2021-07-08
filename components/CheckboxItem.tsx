@@ -1,15 +1,18 @@
 import { Checkbox } from "@chakra-ui/react"
 import React from "react";
 
-export default function CustomCheckboxGroup(props) {
+export default function CustomCheckboxItem(props) {
     const [checkedItem, setcheckedItem] = React.useState(false)
+
     return(
         <>
             <Checkbox
-            id={props.setId}
+            mx={props.mx}
+            id={props.id}
             isChecked={checkedItem}
             onChange={(e) => setcheckedItem(e.target.checked)}
-            >{props.value}
+            value={props.value}
+            >{props.content}
             </Checkbox>
         </>
     )

@@ -1,36 +1,61 @@
-import { Checkbox, Flex, Heading, Stack, CheckboxGroup } from '@chakra-ui/react'
+import { Checkbox, Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, useCheckbox } from '@chakra-ui/react'
 import Inputfield from '../components/Inputfield'
 import CheckboxItem from '../components/CheckboxItem'
+import { Children, useState } from 'react'
 
-const IndexPage = () => (
-  <Flex height="100vh" alignItems="center" justifyContent="center" direction="column">
-    <Flex direction="column" background="white.200" p={2}>
-      <Heading textColor="gray.200" size="md">Word Finder 2.0</Heading>
-    </Flex>
-    <Inputfield />
-    <Stack spacing={6}>
-      <CheckboxGroup colorScheme="blue" defaultValue={['similar']}>
-        <Flex direction="row"alignItems="left" >      
+const IndexPage = () => {
+  const { toggleColorMode } = useColorMode()
 
-          <Flex direction="column" alignItems="left">
-            <CheckboxItem mx={5} value="Similar words" setId={'similar'}  />
-            <Checkbox mx={5} value="antonyms">Antonyms</Checkbox>
-          </Flex>
+  const [checkedItems, setCheckedItems] = useState([]);
+  const items = [];
 
-          <Flex direction="column" alignItems="left">        
-            <Checkbox mx={2} value="hypernyms">Hypernyms</Checkbox>
-            <Checkbox mx={2} value="hyponyms">Hyponyms</Checkbox>
-          </Flex>
+  const API_URL = "https://api.datamuse.com/words?";
 
-          <Flex direction="column" alignItems="left">   
-            <Checkbox mx={5} value="synonyms">Synonyms</Checkbox>
-            <Checkbox mx={5} value="rhymes">Rhymes</Checkbox>
-          </Flex>
+  const runApi = () => {
+    checkedItems.forEach((element) => {
+      if (element) {
+        console.log(`${element} is checked`)
+      }
+    })
+  }
+
+  return (
+    <Flex height="100vh" alignItems="center" justifyContent="flex-start" direction="column">
+
+      <Flex width="100vw">
+        <Heading textColor="gray.200" size="md" m={5} >Word Finder 2.0</Heading>
+        <Spacer />
+        <Button onClick={toggleColorMode} m={5}> ☽ </Button>
+      </Flex>
+
+        <Flex height="inherit" alignItems="center" direction="column" justify="center">
+          <Inputfield />
+          <Stack spacing={6}>
+            <CheckboxGroup colorScheme="blue" defaultValue={['similar']} onChange={setCheckedItems}>
+              <Flex direction="row"alignItems="left" >      
+                <Flex direction="column" alignItems="left">
+                  <CheckboxItem value="similar" mx={5} content={'Similar words'} />
+                  <CheckboxItem value="antonyms" mx={5} content={'Antonyms'}/>
+                </Flex>
+
+                <Flex direction="column" alignItems="left" wrap="inherit">        
+                  <CheckboxItem mx={0} value="hypernyms" content={'Hypernyms'} />
+                  <CheckboxItem mx={0} value="hyponyms" content={'Hyponyms'} />
+                </Flex>
+
+                <Flex direction="column" alignItems="left">   
+                  <CheckboxItem mx={5} value="synonyms" content={'Synonyms'}  />
+                  <CheckboxItem mx={5} value="rhymes" content={'Rhymes'}  />
+                </Flex>
+
+              </Flex>
+            </CheckboxGroup>
+          </Stack>
+          <Button my={10} onClick={runApi}>Search</Button>
 
         </Flex>
-      </CheckboxGroup>
-    </Stack>    
-  </Flex>  
-)
+    </Flex>  
+  )
+}
 
 export default IndexPage
