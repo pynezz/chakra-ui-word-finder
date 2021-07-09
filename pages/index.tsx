@@ -18,15 +18,14 @@ const IndexPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [response, setResponse] = useState([])
 
-  let jsonObj = {
+  let jsonObj ={
 
-      'ml':     [],
+      'ml':     [''],
       'rel_syn':[],
       'rel_ant':[],
       'rel_spc':[],
       'rel_gen':[],
       'rel_rhy':[]
-
   }
   const dataMap = new Map<string, string[]>()
   const [data, setData] = useState([])
@@ -63,10 +62,10 @@ const IndexPage = () => {
             console.log('Response', res)
             responses.push(element, res)
             setResponse(res);
-            jsonObj[element] = res;
+            jsonObj[element] = JSON.parse(res);
             dataMap.set(element, JSON.parse(res))
             console.log(jsonObj)
-            setData(res)
+            setData(JSON.parse(res))
           }
         };
       }
@@ -113,9 +112,9 @@ const IndexPage = () => {
           <Flex direction="row">
 
 
-              <ResultData heading = {'Similar'} results = {dataMap['ml']} key={Math.floor(Math.random() * 1000)}/>
-              <ResultData heading = {'Hyponyms'} results = {jsonObj.rel_gen} key={Math.floor(Math.random() * 1000)}/>
-              <ResultData heading = {'Rhymes'} results = {data} key={Math.floor(Math.random() * 1000)}/>
+              <ResultData heading = {'Similar'} results={'jsonObj.ml.keys.apply()'} key={Math.floor(Math.random() * 1000)}/>
+              {/* <ResultData heading = {'Hyponyms'} results = {jsonObj['rel_spc']} key={Math.floor(Math.random() * 1000)}/>
+              <ResultData heading = {'Rhymes'} results = {data} key={Math.floor(Math.random() * 1000)}/> */}
 
 
             {/* <ResultData 
