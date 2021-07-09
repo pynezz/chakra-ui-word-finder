@@ -1,34 +1,43 @@
-import { Checkbox, Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, useCheckbox } from '@chakra-ui/react'
-import Inputfield from '../components/Inputfield'
-import CheckboxItem from '../components/CheckboxItem'
-import { Children, useRef, useState } from 'react'
+import { Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, Input } from '@chakra-ui/react'
+import Checkboxes from '../components/Checkboxes'
+import ResultData from '../components/ResultData'
+import { useState } from 'react'
+
 
 const IndexPage = () => {
+
+  // TOGGLE DARKMODE
   const { toggleColorMode } = useColorMode()
 
-  const [checkedItems, setCheckedItems] = useState([]);
-
+  // THE API ENDPOINT
   const API_URL = "https://api.datamuse.com/words?";
 
+  // HOOKS
+  const [checkedItems, setCheckedItems] = useState([])
+  const [inputValue, setInputValue] = useState('');
+  const [response, setResponse] = useState([])
+
+  // THE API FUNCTION
   const runApi = (search) => {
-    const r : number = 12
-    const maxResponses : string = `&max=${r}`
-    
+    const r: number = 12
+    const maxResponses: string = `&max=${r}`
+    //search = 'another'
     checkedItems.forEach((element) => {
       if (element) {                    // If an element is checked(this checks for bools)
-        console.log(typeof(element) + typeof(items))
-        let res = "";                   // Create a string variable
         let req = new XMLHttpRequest(); // Make a new request:
+        console.log(`search term: ${search}`)
         req.open(
           "GET",
-          `${API_URL}${element.value}=${search}${maxResponses}`
+          `${API_URL}${element}=${search}${maxResponses}`
         );
         req.setRequestHeader("Accept", "application/json");
         req.send();       // Send the request to the API with the checkbox's value as a parameter
         req.onload = () => {
           // When the request is done
           if (req.status == 200) {
-            res = req.response; // Assign the response to the string variable 'res'
+            let res = req.response; // Assign the response to the string variable 'res'
+            console.log('Response', JSON.parse(res))
+            setResponse(JSON.parse(res));
           }
         };
       }
@@ -45,30 +54,36 @@ const IndexPage = () => {
       </Flex>
 
         <Flex height="inherit" alignItems="center" direction="column" justify="center">
-          <Inputfield />
+          <Input 
+            placeholder="Enter a word..."
+            variant="flushed" 
+            type="text" 
+            height="60px" 
+            width="400px" 
+            mb={4} 
+            fontSize="38px"
+            textAlign="center"
+            value={inputValue}
+            onChange={(event) => setInputValue(event.target.value)}
+          />
           <Stack spacing={6}>
-            <CheckboxGroup colorScheme="blue" defaultValue={['similar']} onChange={setCheckedItems}>
+            <CheckboxGroup colorScheme="blue" /*defaultValue={['ml']}*/ onChange={setCheckedItems}>
               <Flex direction="row"alignItems="left" >
-                
-                <Flex direction="column" alignItems="left">
-                  <CheckboxItem value="similar" mx={5} content={'Similar words'} />
-                  <CheckboxItem value="antonyms" mx={5} content={'Antonyms'}/>
-                </Flex>
-
-                <Flex direction="column" alignItems="left" wrap="inherit">        
-                  <CheckboxItem mx={0} value="hypernyms" content={'Hypernyms'} />
-                  <CheckboxItem mx={0} value="hyponyms" content={'Hyponyms'} />
-                </Flex>
-
-                <Flex direction="column" alignItems="left">   
-                  <CheckboxItem mx={5} value="synonyms" content={'Synonyms'}  />
-                  <CheckboxItem mx={5} value="rhymes" content={'Rhymes'}  />
-                </Flex>
-
+                <Checkboxes />
               </Flex>
             </CheckboxGroup>
+
           </Stack>
-          <Button my={10} onClick={runApi}>Search</Button>
+          <Button my={10} onClick={() => runApi(inputValue)}>Search</Button>
+          <Flex direction="row">
+            {response.map(words => (
+              <ResultData
+              heading = {'hello'}
+              results = {words.word}
+               />
+            ))}
+          </Flex>
+          
 
         </Flex>
     </Flex>  
