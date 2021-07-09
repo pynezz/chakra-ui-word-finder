@@ -38,7 +38,7 @@ const IndexPage = () => {
   }
   let responses = ['', '']
   // THE API FUNCTION
-  const runApi =  (search) =>  {
+  const runApi = async (search) =>  {
 
     const r: number = 12
     const maxResponses: string = `&max=${r}`
@@ -54,7 +54,7 @@ const IndexPage = () => {
         );
         req.setRequestHeader("Accept", "application/json");
         req.send();       // Send the request to the API with the checkbox's value as a parameter
-        req.onload = () => {
+        req.onload = async ()  =>  {
           // When the request is done
           if (req.status == 200) {
             let res = req.response; // Assign the response to the string variable 'res'
@@ -65,7 +65,7 @@ const IndexPage = () => {
             jsonObj[element] = JSON.parse(res);
             dataMap.set(element, JSON.parse(res))
             console.log(jsonObj)
-            setData(JSON.parse(res))
+            await setData(JSON.parse(res))
           }
         };
       }
@@ -111,7 +111,7 @@ const IndexPage = () => {
           <Button my={10} onClick={() => runApi(inputValue)}>Search</Button>
           <Flex direction="row">
 
-
+                      {/* //! THE ISSUE IS HERE. IT DOES NOT GET THE LENGTH. IT IS NOT EMPTY, DOES IT RENDER BEFORE IT'S DONE?? */}
               <ResultData heading = {'Similar'} results={jsonObj.ml.values.length} key={Math.floor(Math.random() * 1000)}/>
               {/* <ResultData heading = {'Hyponyms'} results = {jsonObj['rel_spc']} key={Math.floor(Math.random() * 1000)}/>
               <ResultData heading = {'Rhymes'} results = {data} key={Math.floor(Math.random() * 1000)}/> */}
