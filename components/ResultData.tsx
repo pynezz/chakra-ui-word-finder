@@ -1,15 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Flex, Heading } from '@chakra-ui/react'
 
 const ResultData = ({heading, results}) => {
+    
     return (
-        <Flex direction="column">
-            <Heading>
-                {heading}
-            </Heading>
-            <p>
-                {results}
-            </p>
+        <Flex direction="column" mx={4}>
+            <h1> {heading} </h1>
+            <p> {results} </p>
+            
         </Flex>
     )
 }

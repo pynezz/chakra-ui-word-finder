@@ -1,7 +1,8 @@
-import { Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, Input } from '@chakra-ui/react'
+import { Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, Input, useForceUpdate } from '@chakra-ui/react'
 import Checkboxes from '../components/Checkboxes'
 import ResultData from '../components/ResultData'
-import { useState } from 'react'
+import { Children, useState } from 'react'
+
 
 
 const IndexPage = () => {
@@ -17,13 +18,35 @@ const IndexPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [response, setResponse] = useState([])
 
+  let jsonObj = {
+    'data': {
+
+      'ml':     {},
+      'rel_syn':[],
+      'rel_ant':[],
+      'rel_spc':[],
+      'rel_gen':[],
+      'rel_rhy':[]
+    }
+  }
+  let dataMap = new Map<string, string[]>()
+  const [data, setData] = useState([''])
+
+  let calls = ['']
+
+  const handleChange = ({ item, value }) => {
+    setCheckedItems(item);
+    calls.push(value)
+  }
+  let responses = ['', '']
   // THE API FUNCTION
-  const runApi = (search) => {
+  const runApi = async (search) =>  {
     const r: number = 12
     const maxResponses: string = `&max=${r}`
     //search = 'another'
-    checkedItems.forEach((element) => {
-      if (element) {                    // If an element is checked(this checks for bools)
+    checkedItems.forEach( async (element) => {
+      if (element) {                    // If an element is present
+        console.log(element)
         let req = new XMLHttpRequest(); // Make a new request:
         console.log(`search term: ${search}`)
         req.open(
@@ -31,17 +54,25 @@ const IndexPage = () => {
           `${API_URL}${element}=${search}${maxResponses}`
         );
         req.setRequestHeader("Accept", "application/json");
-        req.send();       // Send the request to the API with the checkbox's value as a parameter
+        await req.send();       // Send the request to the API with the checkbox's value as a parameter
         req.onload = () => {
           // When the request is done
           if (req.status == 200) {
             let res = req.response; // Assign the response to the string variable 'res'
-            console.log('Response', JSON.parse(res))
-            setResponse(JSON.parse(res));
+            res = JSON.parse(res)
+            console.log('Response', res)
+            responses.push(element, res)
+            setResponse(res);
+            jsonObj.data[element] = res;
+            dataMap.set(element, res)
+            console.log(jsonObj.data)
+            setData(res.word)
           }
         };
       }
     })
+    
+    //var data_ = jsonObj.map(v => v.data)
   }
 
   return (
@@ -54,7 +85,7 @@ const IndexPage = () => {
       </Flex>
 
         <Flex height="inherit" alignItems="center" direction="column" justify="center">
-          <Input 
+          <Input
             placeholder="Enter a word..."
             variant="flushed" 
             type="text" 
@@ -67,7 +98,11 @@ const IndexPage = () => {
             onChange={(event) => setInputValue(event.target.value)}
           />
           <Stack spacing={6}>
-            <CheckboxGroup colorScheme="blue" /*defaultValue={['ml']}*/ onChange={setCheckedItems}>
+            <CheckboxGroup 
+              colorScheme="blue" 
+              /*defaultValue={['ml']}*/ 
+              onChange={setCheckedItems} //setCheckedItems
+            >
               <Flex direction="row"alignItems="left" >
                 <Checkboxes />
               </Flex>
@@ -76,13 +111,41 @@ const IndexPage = () => {
           </Stack>
           <Button my={10} onClick={() => runApi(inputValue)}>Search</Button>
           <Flex direction="row">
-            {response.map(words => (
-              <ResultData
-              heading = {'hello'}
-              results = {words.word}
-               />
+
+            {data.map(data => (
+              <ResultData heading = {'Similar'} results = {data} key={Math.floor(Math.random() * 1000)}/>
             ))}
+            {/* <ResultData 
+              heading={'Similar'}
+              results={data}
+            />
+
+            <ResultData 
+              heading={'Hypernyms'}
+              results={dataMap.size} 
+            />
+
+            <ResultData 
+              heading={'Hyponyms'}
+              results={dataMap.get('rel_gen')} 
+            />
+
+            <ResultData 
+              heading={'Synonyms'}
+              results={dataMap.get('rel_syn')} 
+            />
+
+            <ResultData 
+              heading={'Antonyms'}
+              results={dataMap.values} 
+            />
+
+            <ResultData 
+              heading={'Rhymes'}
+              results={dataMap.forEach(k => k.values.toString())} 
+            /> */}
           </Flex>
+
           
 
         </Flex>
