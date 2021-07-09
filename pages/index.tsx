@@ -19,18 +19,17 @@ const IndexPage = () => {
   const [response, setResponse] = useState([])
 
   let jsonObj = {
-    'data': {
 
-      'ml':     {},
+      'ml':     [],
       'rel_syn':[],
       'rel_ant':[],
       'rel_spc':[],
       'rel_gen':[],
       'rel_rhy':[]
-    }
+
   }
-  let dataMap = new Map<string, string[]>()
-  const [data, setData] = useState([''])
+  const dataMap = new Map<string, string[]>()
+  const [data, setData] = useState([])
 
   let calls = ['']
 
@@ -40,7 +39,8 @@ const IndexPage = () => {
   }
   let responses = ['', '']
   // THE API FUNCTION
-  const runApi = async (search) =>  {
+  const runApi =  (search) =>  {
+
     const r: number = 12
     const maxResponses: string = `&max=${r}`
     //search = 'another'
@@ -54,19 +54,19 @@ const IndexPage = () => {
           `${API_URL}${element}=${search}${maxResponses}`
         );
         req.setRequestHeader("Accept", "application/json");
-        await req.send();       // Send the request to the API with the checkbox's value as a parameter
+        req.send();       // Send the request to the API with the checkbox's value as a parameter
         req.onload = () => {
           // When the request is done
           if (req.status == 200) {
             let res = req.response; // Assign the response to the string variable 'res'
-            res = JSON.parse(res)
+            //res = JSON.parse(res)
             console.log('Response', res)
             responses.push(element, res)
             setResponse(res);
-            jsonObj.data[element] = res;
-            dataMap.set(element, res)
-            console.log(jsonObj.data)
-            setData(res.word)
+            jsonObj[element] = res;
+            dataMap.set(element, JSON.parse(res))
+            console.log(jsonObj)
+            setData(res)
           }
         };
       }
@@ -112,9 +112,12 @@ const IndexPage = () => {
           <Button my={10} onClick={() => runApi(inputValue)}>Search</Button>
           <Flex direction="row">
 
-            {data.map(data => (
-              <ResultData heading = {'Similar'} results = {data} key={Math.floor(Math.random() * 1000)}/>
-            ))}
+
+              <ResultData heading = {'Similar'} results = {dataMap['ml']} key={Math.floor(Math.random() * 1000)}/>
+              <ResultData heading = {'Hyponyms'} results = {jsonObj.rel_gen} key={Math.floor(Math.random() * 1000)}/>
+              <ResultData heading = {'Rhymes'} results = {data} key={Math.floor(Math.random() * 1000)}/>
+
+
             {/* <ResultData 
               heading={'Similar'}
               results={data}
