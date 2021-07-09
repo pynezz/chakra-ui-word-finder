@@ -112,7 +112,7 @@ const IndexPage = () => {
           <Flex direction="row">
 
 
-              <ResultData heading = {'Similar'} results={'jsonObj.ml.keys.apply()'} key={Math.floor(Math.random() * 1000)}/>
+              <ResultData heading = {'Similar'} results={jsonObj.ml.values.length} key={Math.floor(Math.random() * 1000)}/>
               {/* <ResultData heading = {'Hyponyms'} results = {jsonObj['rel_spc']} key={Math.floor(Math.random() * 1000)}/>
               <ResultData heading = {'Rhymes'} results = {data} key={Math.floor(Math.random() * 1000)}/> */}
 
