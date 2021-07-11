@@ -7,23 +7,23 @@ interface IProps {
     search: string
 }
 
-const ApiData : React.FC<IProps> = ({parameter, maxRes, search }): JSX.Element => {
-    const API_URL = "https://api.datamuse.com/words?";
-    let res = fetch(`${API_URL}${parameter}=${search}${maxRes}`, {
-        method:'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(res => console.log(res))
-    .catch(err => console.log(err))
-    return <ApiData parameter={parameter} maxRes={maxRes} search={search}>
+// const ApiData : React.FC<IProps> = ({parameter, maxRes, search }): JSX.Element => {
+//     const API_URL = "https://api.datamuse.com/words?";
+//     let res = fetch(`${API_URL}${parameter}=${search}${maxRes}`, {
+//         method:'GET',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         }
+//     }).then(res => console.log(res))
+//     .catch(err => console.log(err))
+//     return <ApiData parameter={parameter} maxRes={maxRes} search={search}>
         
     
-    <p>{res}</p>
+//     <p>{res}</p>
     
-    </ApiData>
+//     </ApiData>
     
-}
+// }
 /*
     Parameter: what to ask the API for (ml, rel_rhy etc.)
     maxRes: Max responses
@@ -46,5 +46,5 @@ const ApiData : React.FC<IProps> = ({parameter, maxRes, search }): JSX.Element =
 // }
 
 
-export default ApiData
+// export default ApiData
 // export default ResComp
