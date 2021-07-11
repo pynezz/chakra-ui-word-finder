@@ -2,7 +2,7 @@ import { Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, Inpu
 import Checkboxes from '../components/Checkboxes'
 import ResultData from '../components/ResultData'
 import { Children, useState } from 'react'
-import ApiData from '../components/Api'
+// import ApiData from '../components/Api'
 // import ResComp from '../components/Api'
 
 
