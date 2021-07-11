@@ -12,4 +12,6 @@ const ResultData = (props) => {
     )
 }
 
+
+
 export default ResultData

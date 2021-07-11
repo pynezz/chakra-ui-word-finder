@@ -1,7 +1,9 @@
-import { Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, Input, useForceUpdate } from '@chakra-ui/react'
+import { Flex, Heading, Stack, CheckboxGroup, useColorMode, Button, Spacer, Input, useForceUpdate, FormHelperText } from '@chakra-ui/react'
 import Checkboxes from '../components/Checkboxes'
 import ResultData from '../components/ResultData'
 import { Children, useState } from 'react'
+import ApiData from '../components/Api'
+// import ResComp from '../components/Api'
 
 
 
@@ -21,15 +23,16 @@ const IndexPage = () => {
   let jsonObj ={
 
       'ml':     [''],
-      'rel_syn':[],
-      'rel_ant':[],
-      'rel_spc':[],
-      'rel_gen':[],
-      'rel_rhy':[]
+      'rel_syn':[''],
+      'rel_ant':[''],
+      'rel_spc':[''],
+      'rel_gen':[''],
+      'rel_rhy':['']
   }
   const dataMap = new Map<string, string[]>()
-  const [data, setData] = useState([])
+  const [data, setData] = useState([''])
 
+  
   let calls = ['']
 
   const handleChange = ({ item, value }) => {
@@ -38,12 +41,12 @@ const IndexPage = () => {
   }
   let responses = ['', '']
   // THE API FUNCTION
-  const runApi = async (search) =>  {
+  const runApi = (search) =>  {
 
     const r: number = 12
     const maxResponses: string = `&max=${r}`
     //search = 'another'
-    checkedItems.forEach( async (element) => {
+    checkedItems.forEach( (element) => {
       if (element) {                    // If an element is present
         console.log(element)
         let req = new XMLHttpRequest(); // Make a new request:
@@ -54,7 +57,7 @@ const IndexPage = () => {
         );
         req.setRequestHeader("Accept", "application/json");
         req.send();       // Send the request to the API with the checkbox's value as a parameter
-        req.onload = async ()  =>  {
+        req.onload = ()  =>  {
           // When the request is done
           if (req.status == 200) {
             let res = req.response; // Assign the response to the string variable 'res'
@@ -65,12 +68,13 @@ const IndexPage = () => {
             jsonObj[element] = JSON.parse(res);
             dataMap.set(element, JSON.parse(res))
             console.log(jsonObj)
-            await setData(JSON.parse(res))
+            setData(jsonObj[element]) //! DETTE FUNKA
+            //setData(JSON.parse(res))
           }
         };
       }
     })
-    
+    console.log('data: ', data)//!FUNKER
     //var data_ = jsonObj.map(v => v.data)
   }
 
@@ -105,11 +109,26 @@ const IndexPage = () => {
               <Flex direction="row"alignItems="left" >
                 <Checkboxes />
               </Flex>
+              <Flex direction="row">
+            {/* { 
+              checkedItems.map(element => {
+                if (element) {
+                  return(
+                    <ResComp parameter={element} search={inputValue} maxRes={'&max=12'} category={element} />
+
+                    )
+                  }
+                })
+            
+              } */}
+              </Flex>
             </CheckboxGroup>
 
           </Stack>
-          <Button my={10} onClick={() => runApi(inputValue)}>Search</Button>
-          <Flex direction="row">
+          {/* <Button my={10} onClick={() => runApi(inputValue)}>Search</Button> */}
+          {/* <ApiData parameter='ml' maxRes='&max=12' search={inputValue} /> */}
+
+
 
                       {/* //! THE ISSUE IS HERE. IT DOES NOT GET THE LENGTH. IT IS NOT EMPTY, DOES IT RENDER BEFORE IT'S DONE?? */}
               <ResultData heading = {'Similar'} results={jsonObj.ml.values.length} key={Math.floor(Math.random() * 1000)}/>
@@ -146,7 +165,7 @@ const IndexPage = () => {
               heading={'Rhymes'}
               results={dataMap.forEach(k => k.values.toString())} 
             /> */}
-          </Flex>
+          
 
           
 
