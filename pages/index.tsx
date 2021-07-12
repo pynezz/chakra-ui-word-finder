@@ -20,10 +20,12 @@ const IndexPage = () => {
 
   // THE API FUNCTION
   const getWords = async (param, search) => {
-    const response = await fetch(`${API_URL}${param}=${search}`);
+    const response = await fetch(`${API_URL}${param}=${search}&max=12`);
     const data = await response.json();
-    setResponse(data.word);
-
+    let textObj = await JSON.stringify(data);
+    textObj = JSON.parse(textObj)
+    setResponse(data);
+    console.log(textObj[0]);
   }
     //var data_ = jsonObj.map(v => v.data)
   
@@ -50,8 +52,15 @@ const IndexPage = () => {
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
           />
+          <Stack spacing={5}>
+            <Flex direction="column">
+              {response.map(word => (
+                  <Words data={word.word}></Words>
+              ))}
 
-            <Words data={response}></Words>
+            </Flex>
+          </Stack>
+          
 
           {/* <Button my={10} onClick={() => runApi(inputValue)}>Search</Button> */}
           {/* <ApiData parameter='ml' maxRes='&max=12' search={inputValue} /> */}

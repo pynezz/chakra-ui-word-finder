@@ -1,6 +1,6 @@
 import React from "react";
 
-const Words = ({data}) => {
+const Words = ( {data} ) => {
     return (
         <div>
             <p>{data}</p>
